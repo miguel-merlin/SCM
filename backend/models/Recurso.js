@@ -1,0 +1,31 @@
+const mongoose = require('mongoose');
+const {appConfig} = require('../config')
+
+const Schema = mongoose.Schema
+const RecursoSchema = new Schema({
+    groupoId: {
+        type: String,
+        trim: true,
+        required: [true, 'Un recurso debe de tener un grupo']
+    },
+    imgUrl: {
+        type: String,
+        trim: true,
+        required: [true, 'Un recurso debe tener un URL']
+    },
+    createdAt: {
+        type: Date,
+        default: Date.now()
+    },
+    isDefault: {
+        type: Boolean,
+        default: true
+    }
+})
+
+RecursoSchema.methods.setImgUrl = function setImgUrl (filename) {
+    const { host, port} = appConfig
+    this.imgUrl = `${host}:${port}/public/${filename}`
+} //Guardar imagenes localmente, quitar cuando acceso a google cloud
+
+module.exports = mongoose.model('Recurso', RecursoSchema)
