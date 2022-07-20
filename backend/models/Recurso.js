@@ -17,9 +17,13 @@ const RecursoSchema = new Schema({
         type: Date,
         default: Date.now()
     },
-    isDefault: {
-        type: Boolean,
-        default: true
+    tiempoTransicion: {
+        type: Number,
+        default: 10,
+    },
+    businessId: {
+        type: String,
+        trim: true,
     }
 })
 

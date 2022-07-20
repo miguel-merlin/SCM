@@ -8,14 +8,13 @@ const GrupoSchema = new Schema({
         trim: true,
         required: [true, 'Un grupo debe de tener un business ID']
     },
-    grupoId: {
-        type: String,
-        trim: true,
-        required: [true, 'Un grupo debe de tener un business ID']   
-    },
     grupoName: {
         type: String,
         required: [true, 'Un grupo debe de tener un nombre']
+    },
+    isDefault: {
+        type: Boolean,
+        required: [true, 'Un grupo de tener configuracion (Default)']
     }
 })
 
