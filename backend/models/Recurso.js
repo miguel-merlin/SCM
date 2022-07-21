@@ -3,7 +3,7 @@ const {appConfig} = require('../config')
 
 const Schema = mongoose.Schema
 const RecursoSchema = new Schema({
-    groupoId: {
+    grupoId: {
         type: String,
         trim: true,
         required: [true, 'Un recurso debe de tener un grupo']

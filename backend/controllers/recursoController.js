@@ -1,9 +1,10 @@
 const Recurso = require('../models/Recurso')
+const sharp = require('sharp')
 
-async function addRecurso(req, res) {
+async function addRecurso(req, res, next) {
     try {
         const {
-            groupoId,
+            grupoId,
             imgUrl,
             tiempoTransicion,
             businessId,
@@ -11,27 +12,32 @@ async function addRecurso(req, res) {
         } = req.body
 
         const recursos = Recurso({
-            groupoId,
+            grupoId,
             imgUrl,
             tiempoTransicion,
             businessId,
             orden,
         })
 
-        if (req.file) {
-            const { filename } = req.file
-            recursos.setImgUrl(filename)
+        if (!req.file) {
+            next();
         }
+        req.file.filename = `${req.file.fieldname}-${Date.now()}.jpeg`
+        const filename = req.file.filename
 
+        await sharp(req.file.buffer)
+            .resize(500, 500)
+            .toFormat('jpeg')
+            .jpeg({ quality: 90 })
+            .toFile(`./storage/imgs/${req.file.filename}`);
+
+        recursos.setImgUrl(filename)
         const recursosStored = await recursos.save()
-
         res.status(201).send({ recursosStored })
     } catch (e) {
         res.status(500).send({ message: e.message })
     }
 }
-
-
 
 async function getAllRecursos(req, res) {
     const recursos = await Recurso.find().lean().exec()
