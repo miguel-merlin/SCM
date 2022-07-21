@@ -75,10 +75,23 @@ async function deleteRecursoById(req, res, next) {
     }
 }
 
+async function updateRecursoId(req, res, next){
+    const id = req.params.id
+    try {
+        await Recurso.findByIdAndUpdate(id, req.body)
+        await Recurso.save()
+        const updtRecurso = await Recurso.findById(id);
+        res.status(200).send({updtRecurso})
+    } catch (error) {
+        return next( new AppError('No se pudo actualizar el grupo', 500))
+    }
+}
+
 module.exports = {
     addRecurso,
     getAllRecursos,
     getRecursoById,
     getRecursosByGroup,
     deleteRecursoById,
+    updateRecursoId,
 }

@@ -56,9 +56,22 @@ async function delGrupo(req, res, next) {
     }
 }
 
+async function updateGrupo(req, res, next) {
+    const id = req.params.id
+    try {
+        await Grupo.findByIdAndUpdate(id, req.body);
+        await Grupo.save();
+        const updtGrupo = await Grupo.findById(id)
+        res.status(200).send(updtGrupo)
+    } catch (error) {
+        return next( new AppError('No se pudo modificar el grupo'), 500)
+    }
+}
+
 module.exports = {
     addGrupo,
     getAllGrupos,
     getGrupo,
     delGrupo,
+    updateGrupo,
 }
