@@ -1,5 +1,6 @@
 const Recurso = require('../models/Recurso')
-const sharp = require('sharp')
+const sharp = require('sharp');
+const AppError = require('../utils/appError');
 
 async function addRecurso(req, res, next) {
     try {
@@ -35,7 +36,7 @@ async function addRecurso(req, res, next) {
         const recursosStored = await recursos.save()
         res.status(201).send({ recursosStored })
     } catch (e) {
-        res.status(500).send({ message: e.message })
+        return next(new AppError('No se pudo subir el recurso', 400))
     }
 }
 
@@ -44,40 +45,34 @@ async function getAllRecursos(req, res) {
     res.status(200).send({ recursos })
 }
 
-async function getRecursoById(req, res) {
+async function getRecursoById(req, res, next) {
     const id = req.params.id
-    await Recurso.findById(id, function (err, recurso) {
-        if (err) {
-            res.status(500).send({ message: `No se encontro el recurso con id ${id}` })
-            console.log(err)
-        } else {
-            res.status(200).send({ message: recurso })
-        }
-    })
+    try {
+       const recurso = await Recurso.findById(id)
+       res.status(200).send({recurso})
+    } catch (error) {
+        return next( new AppError('No se pudo encontrar el recurso', 500))
+    }
 }
 
-async function getRecursosByGroup(req, res) {
+async function getRecursosByGroup(req, res, next) {
     const groupId = req.params.id
-    await Recurso.find({ grupoId: groupId }, function (err, recursos) {
-        if (err) {
-            res.status(500).send({ message: `No se encontraron los recursos para el grupo con id ${groupId}` })
-            console.log(err)
-        } else {
-            res.status(200).send({ message: recursos })
-        }
-    })
+    try {
+        const recursos = await Recurso.find({ grupoId: groupId })
+        res.status(200).send({recursos})
+    } catch (error) {
+        return next( new AppError('No se pudieron encontrar los recursos', 500))
+    }
 }
 
-async function deleteRecursoById(req, res) {
+async function deleteRecursoById(req, res, next) {
     const id = req.params.id
-    await Recurso.findByIdAndDelete(id, function (err) {
-        if (err) {
-            res.status(500).send({ message: `El recurso con id ${id} no ha podido ser eliminado` })
-            console.log(err)
-        } else {
-            res.status(200).send({ message: `El recurso con id ${id} ha sido eliminado` })
-        }
-    })
+    try {
+        const delRecurso = await Recurso.findByIdAndDelete(id)
+        res.status(200).send({delRecurso})
+    } catch (error) {
+        return next( new AppError('No se encontro el grupo', 500))
+    }
 }
 
 module.exports = {

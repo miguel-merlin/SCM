@@ -27,7 +27,7 @@ async function addGrupo(req, res, next) {
         res.status(201).send({ gruposStored })
 
     } catch (error) {
-        res.status(500).send({ message: error.message })
+        next( new AppError('No se pudo guardar el grupo', 500))
     }
 }
 
@@ -36,28 +36,24 @@ async function getAllGrupos(req, res) {
     res.status(200).send({ grupos })
 }
 
-async function getGrupo(req, res) {
+async function getGrupo(req, res, next) {
     const id = req.params.id
-    await Grupo.findById(id, function (err, grupo) {
-        if (err) {
-            res.status(500).send({ message: "Could not find group" })
-            console.log(err)
-        } else {
-            res.status(200).send({message: grupo})
-        }
-    })
+    try {
+        const grupo = await Grupo.findById(id)
+        res.status(200).send({grupo})
+    } catch (error) {
+        return next( new AppError('No se encontro el grupo', 500))
+    }
 }
 
-async function delGrupo(req, res) {
+async function delGrupo(req, res, next) {
     const id = req.params.id
-    await Grupo.findByIdAndDelete(id, function (err) {
-        if (err) {
-            res.status(500).send({ message: "Could not delete group" })
-            console.log(err)
-        } else {
-            res.status(200).send({ message: `Grupo con id ${id} ha sido eliminado` })
-        }
-    })
+    try {
+        const delGrupo = await Grupo.findByIdAndDelete(id)
+        res.status(200).send({delGrupo})
+    } catch (error) {
+        return next( new AppError('No se pudo borrar el grupo'), 500)
+    }
 }
 
 module.exports = {
