@@ -3,6 +3,7 @@ const cors = require('cors')
 const bodyParser = require('body-parser')
 const recursoRoutes = require('./routes/recursos')
 const gruposRoutes = require('./routes/grupos')
+const AppError = require('./utils/appError')
 
 const app = express()
 

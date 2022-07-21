@@ -24,6 +24,11 @@ const RecursoSchema = new Schema({
     businessId: {
         type: String,
         trim: true,
+    },
+    orden: {
+        type: Number,
+        required: [true, 'Un recurso debe de tener un orden'],
+        default: 0,
     }
 })
 
