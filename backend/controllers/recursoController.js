@@ -62,7 +62,7 @@ async function getRecursosByGroup(req, res, next) {
         const recursos = await Recurso.find({ $and: [{businessId: businessId},{grupoId:grupoId}] })
         res.status(200).send({recursos})
     } catch (error) {
-        return next( new AppError('No se pudieron encontrar los recursos', 500))
+        return next( new AppError(`No se pudieron encontrar los recursos ${error}`, 500))
     }
 }
 
@@ -72,7 +72,7 @@ async function deleteRecursoById(req, res, next) {
         const delRecurso = await Recurso.findByIdAndDelete(id)
         res.status(200).send({delRecurso})
     } catch (error) {
-        return next( new AppError('No se encontro el grupo', 500))
+        return next( new AppError(`No se encontro el grupo ${error}`, 500))
     }
 }
 
@@ -83,7 +83,7 @@ async function updateRecursoId(req, res, next){
         const updtRecurso = await Recurso.findById(id);
         res.status(200).send({updtRecurso})
     } catch (error) {
-        return next( new AppError('No se pudo actualizar el grupo', 500))
+        return next( new AppError(`No se pudo actualizar el grupo ${error}`, 500))
     }
 }
 

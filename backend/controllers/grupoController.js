@@ -50,7 +50,7 @@ async function getGrupo(req, res, next) {
         const grupo = await Grupo.findById(id)
         res.status(200).send({ grupo })
     } catch (error) {
-        return next(new AppError('No se encontro el grupo', 500))
+        return next(new AppError(`No se encontro el grupo ${error}`, 500))
     }
 }
 
@@ -60,7 +60,7 @@ async function getGruposByBusiness(req, res, next) {
         const grupos = await Grupo.find({ businessId: businessId })
         res.status(200).send({ grupos })
     } catch (error) {
-        return next(new AppError('No se pudieron encontrar los grupos', 404))
+        return next(new AppError(`No se pudieron encontrar los grupos ${error}`, 404))
     }
 }
 
@@ -70,7 +70,7 @@ async function delGrupo(req, res, next) {
         const delGrupo = await Grupo.findByIdAndDelete(id)
         res.status(200).send({ delGrupo })
     } catch (error) {
-        return next(new AppError('No se pudo borrar el grupo'), 500)
+        return next(new AppError(`No se pudo borrar el grupo ${error}`), 500)
     }
 }
 
