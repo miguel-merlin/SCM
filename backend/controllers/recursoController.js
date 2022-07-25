@@ -87,6 +87,22 @@ async function updateRecursoId(req, res, next){
     }
 }
 
+async function getRecursosByOrden(req, res, next) {
+    const grupoId = req.params.grupoId
+    const businessId = req.params.businessId
+    let arregloRecursos;
+    try {
+        const recursos = await Recurso.find({$and: [{businessId: businessId}, {grupoId: grupoId}]})
+        arregloRecursos = recursos
+        arregloRecursos.sort(function(a,b) {
+            return parseFloat(a.orden) - parseFloat(b.orden)
+        });
+        res.status(201).send(arregloRecursos)
+    } catch (error) {
+        return next(new AppError(`No se pudieron encontrar las URLS ${error}`, 400))
+    }
+}
+
 module.exports = {
     addRecurso,
     getAllRecursos,
@@ -94,4 +110,5 @@ module.exports = {
     getRecursosByGroup,
     deleteRecursoById,
     updateRecursoId,
+    getRecursosByOrden,
 }
