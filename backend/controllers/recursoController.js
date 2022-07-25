@@ -51,7 +51,7 @@ async function getRecursoById(req, res, next) {
        const recurso = await Recurso.findById(id)
        res.status(200).send({recurso})
     } catch (error) {
-        return next( new AppError('No se pudo encontrar el recurso', 500))
+        return next( new AppError(`No se pudo encontrar el recurso ${error}`, 500))
     }
 }
 
