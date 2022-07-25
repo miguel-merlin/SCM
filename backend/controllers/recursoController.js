@@ -36,7 +36,7 @@ async function addRecurso(req, res, next) {
         const recursosStored = await recursos.save()
         res.status(201).send({ recursosStored })
     } catch (e) {
-        return next(new AppError('No se pudo subir el recurso', 400))
+        return next(new AppError(`No se pudo subir el recuros ${e}`, 400))
     }
 }
 
@@ -56,9 +56,10 @@ async function getRecursoById(req, res, next) {
 }
 
 async function getRecursosByGroup(req, res, next) {
-    const groupId = req.params.id
+    const grupoId = req.params.grupoId
+    const businessId = req.params.businessId
     try {
-        const recursos = await Recurso.find({ grupoId: groupId })
+        const recursos = await Recurso.find({ $and: [{businessId: businessId},{grupoId:grupoId}] })
         res.status(200).send({recursos})
     } catch (error) {
         return next( new AppError('No se pudieron encontrar los recursos', 500))
@@ -78,8 +79,7 @@ async function deleteRecursoById(req, res, next) {
 async function updateRecursoId(req, res, next){
     const id = req.params.id
     try {
-        await Recurso.findByIdAndUpdate(id, req.body)
-        await Recurso.save()
+        await Recurso.findByIdAndUpdate(id, {$set: req.body})
         const updtRecurso = await Recurso.findById(id);
         res.status(200).send({updtRecurso})
     } catch (error) {

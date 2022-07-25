@@ -15,6 +15,10 @@ const GrupoSchema = new Schema({
     isDefault: {
         type: Boolean,
         required: [true, 'Un grupo de tener configuracion (Default)']
+    },
+    autoplay: {
+        type: Boolean,
+        required: [true, 'Un grupo debe tener configuracion (Autoplay)']
     }
 })
 
