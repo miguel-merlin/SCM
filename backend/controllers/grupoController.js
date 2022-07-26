@@ -85,6 +85,23 @@ async function updateGrupo(req, res, next) {
     }
 }
 
+async function checkGroupDefault(req, res, next) {
+    const id = req.params.id
+    let checkDefault;
+    try {
+        const grupo = await Grupo.find({$and: [{businessId: id}, {isDefault: true}]})
+        if (grupo) {
+            checkDefault = true
+            res.status(201).send(grupo)
+        } else {
+            checkDefault = false
+            res.status(200).send({message: "No hay ningun grupo default para esta empresa"})
+        }
+    } catch (error) {
+        next(new AppError(`Ocurrio un error ${error}`, 500))
+    }
+}
+
 module.exports = {
     addGrupo,
     getAllGrupos,
@@ -92,4 +109,5 @@ module.exports = {
     delGrupo,
     updateGrupo,
     getGruposByBusiness,
+    checkGroupDefault,
 }
